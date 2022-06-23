@@ -6,7 +6,7 @@ import logging
 class _ColoredFormatter(logging.Formatter):
   """Defines custom colored logging for logger."""
 
-  _FORMAT = "{} [{}] \x1b[0m %(message)s"
+  _FORMAT = "{} [{}] %(asctime)s \x1b[0m (%(filename)s:%(lineno)d) %(message)s"
 
   FORMATS = {
     logging.DEBUG: _FORMAT.format("\x1b[30;47m", "DEBG"),
@@ -18,7 +18,10 @@ class _ColoredFormatter(logging.Formatter):
 
   def format(self, record: logging.LogRecord) -> str:
     """Format the incoming record according to our styles."""
-    return logging.Formatter(self.FORMATS.get(record.levelno)).format(record)
+    return logging.Formatter(
+      self.FORMATS.get(record.levelno),
+      datefmt="%b %d @ %H:%M:%S",
+    ).format(record)
 
 
 logger = logging.getLogger("peer")
